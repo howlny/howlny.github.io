@@ -58,19 +58,18 @@
 
       if (!email && !phone) return;
 
-      // fire in background, don't block UI
       fetch('https://cgnew.wpengine.com/apis/howlny/list', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email, phone }),
-        keepalive: true // 🔥 ensures it still fires if page changes
+        keepalive: true  
       }).catch(err => {
         console.error('Background submit failed:', err);
       });
 
-    }, true); // 🔥 capture phase so it runs BEFORE React
+    }, true); 
   }
 
   function scan() {
