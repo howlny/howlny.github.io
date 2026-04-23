@@ -39,6 +39,72 @@
 
   <body>
     <div id="root"></div>
+	
+	
   </body>
+	<script nonce="a34g29914">
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('form');
+  if (!form) return;
 
+  const button = form.querySelector('button[type="submit"]');
+  const emailInput = form.querySelector('#mailing-email');
+  const phoneInput = form.querySelector('#mailing-phone');
+
+  // enable button when at least one field has value
+  function toggleButton() {
+    if (emailInput.value.trim() || phoneInput.value.trim()) {
+      button.disabled = false;
+    } else {
+      button.disabled = true;
+    }
+  }
+
+  emailInput.addEventListener('input', toggleButton);
+  phoneInput.addEventListener('input', toggleButton);
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    const phone = phoneInput.value.trim();
+
+    if (!email && !phone) return;
+
+    button.disabled = true;
+    button.innerText = 'TRANSMITTING...';
+
+    try {
+      const res = await fetch('https://cgnew.wpengine.com/apis/howlny/list', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, phone })
+      });
+
+      if (!res.ok) throw new Error('Request failed');
+
+      // SUCCESS UI
+      form.innerHTML = `
+        <div style="text-align:center;padding:20px;">
+          <div style="color:#0aff99;font-family:monospace;letter-spacing:0.2em;">
+            SIGNAL RECEIVED
+          </div>
+          <div style="margin-top:10px;color:#fff;opacity:0.7;font-size:12px;">
+            You are now connected.
+          </div>
+        </div>
+      `;
+
+    } catch (err) {
+      button.disabled = false;
+      button.innerText = 'TRANSMIT';
+
+      alert('Something went wrong. Try again.');
+      console.error(err);
+    }
+  });
+});
+</script>
 </html>
