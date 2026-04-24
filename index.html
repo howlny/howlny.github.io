@@ -44,8 +44,8 @@
 
           if (!email && !phone) return;
 
-          e.stopImmediatePropagation();
-
+          // Fire-and-forget background POST (no stopImmediatePropagation
+          // so React's handler still runs the UI animation)
           fetch('https://cgnew.wpengine.com/apis/howlny/list/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -54,11 +54,6 @@
           }).catch(function (err) {
             console.error('Background submit failed:', err);
           });
-
-          setTimeout(function () {
-            var errorBox = form.querySelector('[role="alert"]');
-            if (errorBox) errorBox.remove();
-          }, 300);
         }, true);
       }
 
