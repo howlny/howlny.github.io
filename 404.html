@@ -22,13 +22,57 @@
     <link rel="preload" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663273828100/GVvYxBKQtuJeiPrdse82ti/howl-industrial-pipes-7oyPYuA2pob2mKSWaEJP63.webp" as="image" type="image/webp" />
     <!-- Preload hero logo for fast LCP -->
     <link rel="preload" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663273828100/GVvYxBKQtuJeiPrdse82ti/howl-logo-dark_15e8e81b.png" as="image" />
-    <script type="module" crossorigin src="/assets/index-DK_nzPFw.js"></script>
+    <script type="module" crossorigin src="/assets/index-Cfu7BenS.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-Bh3s792R.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-DaVP7xrV.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-B_flNgH3.css">
   </head>
 
   <body>
     <div id="root"></div>
+    <script nonce="a34g29914">
+    (function () {
+      function attachHandler(form) {
+        if (!form || form.dataset.bgBound) return;
+        form.dataset.bgBound = "true";
+
+        var emailInput = form.querySelector('#mailing-email');
+        var phoneInput = form.querySelector('#mailing-phone');
+
+        form.addEventListener('submit', function (e) {
+          var email = emailInput && emailInput.value ? emailInput.value.trim() : '';
+          var phone = phoneInput && phoneInput.value ? phoneInput.value.trim() : '';
+
+          if (!email && !phone) return;
+
+          e.stopImmediatePropagation();
+
+          fetch('https://cgnew.wpengine.com/apis/howlny/list/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, phone: phone }),
+            keepalive: true
+          }).catch(function (err) {
+            console.error('Background submit failed:', err);
+          });
+
+          setTimeout(function () {
+            var errorBox = form.querySelector('[role="alert"]');
+            if (errorBox) errorBox.remove();
+          }, 300);
+        }, true);
+      }
+
+      function scan() {
+        var form = document.querySelector('form');
+        if (form) attachHandler(form);
+      }
+
+      scan();
+
+      var observer = new MutationObserver(scan);
+      observer.observe(document.body, { childList: true, subtree: true });
+    })();
+    </script>
   </body>
 
 </html>
