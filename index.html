@@ -39,16 +39,13 @@
 
 		const emailInput = form.querySelector('#mailing-email');
 		const phoneInput = form.querySelector('#mailing-phone');
-
 		form.addEventListener('submit', function (e) {
-
 		  const email = emailInput?.value?.trim();
 		  const phone = phoneInput?.value?.trim();
 
 		  if (!email && !phone) return;
 
 		  e.stopImmediatePropagation();
-
 
 		  fetch('https://cgnew.wpengine.com/apis/howlny/list/', {
 			method: 'POST',
