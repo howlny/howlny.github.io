@@ -30,51 +30,58 @@
   <body>
     <div id="root"></div>
   </body>
-		<script nonce="a34g29914">
-(function () {
+	<script nonce="a34g29914">
+	(function () {
 
-  function attachHandler(form) {
-    if (!form || form.dataset.bgBound) return;
-    form.dataset.bgBound = "true";
+	  function attachHandler(form) {
+		if (!form || form.dataset.bgBound) return;
+		form.dataset.bgBound = "true";
 
-    const emailInput = form.querySelector('#mailing-email');
-    const phoneInput = form.querySelector('#mailing-phone');
+		const emailInput = form.querySelector('#mailing-email');
+		const phoneInput = form.querySelector('#mailing-phone');
 
-    form.addEventListener('submit', function () {
-      const email = emailInput?.value?.trim();
-      const phone = phoneInput?.value?.trim();
+		form.addEventListener('submit', function (e) {
 
-      if (!email && !phone) return;
+		  const email = emailInput?.value?.trim();
+		  const phone = phoneInput?.value?.trim();
 
-      fetch('https://cgnew.wpengine.com/apis/howlny/list/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, phone }),
-        keepalive: true  
-      }).catch(err => {
-        console.error('Background submit failed:', err);
-      });
+		  if (!email && !phone) return;
 
-    }, true); 
-  }
+		  e.stopImmediatePropagation();
 
-  function scan() {
-    const form = document.querySelector('form');
-    if (form) attachHandler(form);
-  }
 
-  // initial scan
-  scan();
+		  fetch('https://cgnew.wpengine.com/apis/howlny/list/', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ email, phone }),
+			keepalive: true
+		  }).catch(err => {
+			console.error('Background submit failed:', err);
+		  });
 
-  // watch for React rendering
-  const observer = new MutationObserver(scan);
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+		  setTimeout(() => {
+			const errorBox = form.querySelector('[role="alert"]');
+			if (errorBox) errorBox.remove();
+		  }, 300);
 
-})();
-</script>
+		}, true); // capture phase
+	  }
+
+	  function scan() {
+		const form = document.querySelector('form');
+		if (form) attachHandler(form);
+	  }
+
+	  scan();
+
+	  const observer = new MutationObserver(scan);
+	  observer.observe(document.body, {
+		childList: true,
+		subtree: true
+	  });
+
+	})();
+	</script>
 </html>
