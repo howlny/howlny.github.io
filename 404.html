@@ -3,71 +3,36 @@
 
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HOWL NY</title>
     <meta name="description" content="HOWL — New York. Underground electronic music duo. Alt-rock meets industrial electronics." />
     <meta property="og:title" content="HOWL" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.howl-ny.com" />
+    <meta property="og:description" content="HOWL — New York. Underground electronic music duo. Alt-rock meets industrial electronics." />
     <meta name="theme-color" content="#050a08" />
+    <!-- Security headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://d2xsxph8kpxj0f.cloudfront.net https://scontent-*.cdninstagram.com https://*.cdninstagram.com data:; media-src https://d2xsxph8kpxj0f.cloudfront.net; connect-src 'self' https://cgnew.wpengine.com https://d2xsxph8kpxj0f.cloudfront.net; frame-src 'none'; object-src 'none'; base-uri 'self';" />
     <!-- Preconnect to font + CDN origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://d2xsxph8kpxj0f.cloudfront.net" />
     <!-- Fonts — only load weights actually used, display=swap for fast LCP -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
-    <!-- Preload hero background for fast LCP -->
-    <link rel="preload" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663273828100/GVvYxBKQtuJeiPrdse82ti/howl-industrial-pipes-7oyPYuA2pob2mKSWaEJP63.webp" as="image" type="image/webp" />
+    <!-- Preload hero fallback image for fast LCP -->
+    <link rel="preload" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663273828100/GVvYxBKQtuJeiPrdse82ti/howl-hero-real_e8ec4615.avif" as="image" type="image/avif" />
     <!-- Preload hero logo for fast LCP -->
     <link rel="preload" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663273828100/GVvYxBKQtuJeiPrdse82ti/howl-logo-dark_15e8e81b.png" as="image" />
-    <script type="module" crossorigin src="/assets/index-Cfu7BenS.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-Bh3s792R.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-B_flNgH3.css">
+    <script type="module" crossorigin src="/assets/index-static-gWWzH_0z.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-Dx1exeq8.js">
+    <link rel="modulepreload" crossorigin href="/assets/router-BgIWydhK.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-static-D07cJz0C.css">
   </head>
 
   <body>
     <div id="root"></div>
-    <script nonce="a34g29914">
-    (function () {
-      function attachHandler(form) {
-        if (!form || form.dataset.bgBound) return;
-        form.dataset.bgBound = "true";
-
-        var emailInput = form.querySelector('#mailing-email');
-        var phoneInput = form.querySelector('#mailing-phone');
-
-        form.addEventListener('submit', function (e) {
-          var email = emailInput && emailInput.value ? emailInput.value.trim() : '';
-          var phone = phoneInput && phoneInput.value ? phoneInput.value.trim() : '';
-
-          if (!email && !phone) return;
-
-          // Fire-and-forget background POST (no stopImmediatePropagation
-          // so React's handler still runs the UI animation)
-          fetch('https://cgnew.wpengine.com/apis/howlny/list/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email, phone: phone }),
-            keepalive: true
-          }).catch(function (err) {
-            console.error('Background submit failed:', err);
-          });
-        }, true);
-      }
-
-      function scan() {
-        var form = document.querySelector('form');
-        if (form) attachHandler(form);
-      }
-
-      scan();
-
-      var observer = new MutationObserver(scan);
-      observer.observe(document.body, { childList: true, subtree: true });
-    })();
-    </script>
   </body>
 
 </html>
