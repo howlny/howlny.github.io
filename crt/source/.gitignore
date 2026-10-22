@@ -1,0 +1,6 @@
+node_modules/
+dist/
+# Mirrored from ../media by scripts/sync-media.mjs
+public/media/
+*.log
+.DS_Store

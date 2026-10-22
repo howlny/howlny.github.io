@@ -1,0 +1,31 @@
+{
+  "name": "howl-signal-visualizer",
+  "private": true,
+  "version": "1.0.0",
+  "description": "HOWL Signal Visualizer: a full-screen, microphone-reactive CRT / Eurorack visualizer.",
+  "type": "module",
+  "scripts": {
+    "sync-media": "node scripts/sync-media.mjs",
+    "dev": "node scripts/sync-media.mjs && vite",
+    "check": "tsc --noEmit",
+    "build": "node scripts/sync-media.mjs && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "publish-site": "npm run build && node scripts/publish-site.mjs"
+  },
+  "dependencies": {
+    "@fontsource/bebas-neue": "^5.2.5",
+    "@fontsource/ibm-plex-mono": "^5.2.5",
+    "@fontsource/space-grotesk": "^5.2.5",
+    "@fontsource/vt323": "^5.2.5",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "@types/react": "^19.2.1",
+    "@types/react-dom": "^19.2.1",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "5.9.3",
+    "vite": "^7.3.7"
+  }
+}
