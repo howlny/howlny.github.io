@@ -16,7 +16,7 @@
 
   var BASE = (function () {
     var s = document.currentScript && document.currentScript.src;
-    return s ? s.replace(/[^/]+$/, "") : "/preview/hero/";
+    return s ? s.replace(/[^/]+$/, "") : "/hero/";
   })();
 
   var OUT = "OUT FRIDAY";
@@ -169,8 +169,17 @@
     var top = el("div", "position:absolute;left:" + v.pad + "px;right:" + v.pad + "px;top:" + v.top +
       "px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:" + v.gap + "px;");
     var left = el("div", "display:flex;align-items:center;gap:" + v.gap + "px;flex-wrap:wrap;");
-    left.appendChild(el("div", "font-family:'HOWL SANS';font-size:" + v.hfs +
-      "px;line-height:0.86;color:#fff;white-space:nowrap;animation:" + v.a1 + ";", "HOWL"));
+    // The real brand wordmark, not the display face. The bundled OTF is a
+    // lookalike ("COOL FONT Trippy") whose rings are narrower and tighter
+    // than the actual HOWL mark, so set the logo from the brand asset.
+    // It ships already white — kbIn animates `filter`, so an invert() here
+    // would be overridden mid-animation and the mark would go black.
+    var mark = document.createElement("img");
+    mark.src = BASE + "howl-wordmark.png";
+    mark.alt = "HOWL";
+    mark.setAttribute("style", "height:" + (v.hfs * 0.86) + "px;width:auto;display:block;" +
+      "animation:" + v.a1 + ";");
+    left.appendChild(mark);
     left.appendChild(el("div", "font-family:'JetBrains Mono',monospace;font-weight:700;font-size:" + v.nafs +
       "px;letter-spacing:0.3em;color:#0A0A0A;background:#fff;padding:" + v.napad +
       ";white-space:nowrap;line-height:1;animation:" + v.a2 + ";", "NEW ALBUM"));
@@ -258,6 +267,15 @@
       Array.prototype.forEach.call(hero.children, function (c) {
         if (c !== navLayer && c.id !== "ko-hero") c.classList.add("ko-hidden");
       });
+      // the old hero's background video is hidden but would still be fetched,
+      // so drop it rather than pay for ~1.7 MB nobody sees
+      var old = hero.querySelector(".ko-hidden video");
+      if (old && old.getAttribute("src")) {
+        try { old.pause(); } catch (e) {}
+        old.removeAttribute("src");
+        old.removeAttribute("autoplay");
+        try { old.load(); } catch (e) {}
+      }
     }
     hideStrays();
     new MutationObserver(hideStrays).observe(hero, { childList: true });
