@@ -20,6 +20,7 @@
   })();
 
   var OUT = "OUT FRIDAY";
+  var SPOTIFY = "https://open.spotify.com/artist/2CTS9DLiyqiCO5AAwroMG8";
   var E = "cubic-bezier(.2,.8,.2,1)";
   var ANIMATE = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -91,6 +92,10 @@
       aInv: an("kbInv 8s steps(1) 3s infinite"),
       aGrain: an("kbGrain 0.6s steps(5) infinite"),
       aBlink: an("kbBlink 1s steps(1) infinite"),
+      wide: wide,
+      ctaShPx: o * 1.05,
+      cfs: Math.max(18, Math.min(w * 0.030, h * 0.042)),
+      aCta: inA(1.35),
       a1: inA(0.1), a2: inA(0.3), a3: inA(1.1),
       aStick: an("kbStick 0.7s " + E + " 1.0s both, kbWob 2.4s ease-in-out 2s infinite")
     };
@@ -189,6 +194,7 @@
       v.osh + ";animation:" + v.aStick + ";", OUT));
     stage.appendChild(top);
 
+
     // bottom row
     var bot = el("div", "position:absolute;left:" + v.pad + "px;right:" + v.pad + "px;bottom:" + v.pad +
       "px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:" + v.gap +
@@ -209,7 +215,64 @@
     bot.appendChild(tcWrap);
     stage.appendChild(bot);
 
-    if (refs.video && refs.video.paused) { try { refs.video.play(); } catch (e) {} }
+    // Spotify CTA — the "signal bar". Black with a yellow keyline so it
+    // separates by contrast instead of becoming a third yellow mass after
+    // the ticker and the OUT FRIDAY sticker. The equalizer is the same
+    // vocabulary as REC / FEED: ACTIVE / the timecode: it reads as playing,
+    // not merely clickable. Colour and state live in the stylesheet so
+    // :hover can win; JS only sizes things.
+    var cta = document.createElement("a");
+    cta.href = SPOTIFY;
+    cta.target = "_blank";
+    cta.rel = "noopener noreferrer";
+    cta.setAttribute("aria-label", "Listen to HOWL on Spotify (opens in new tab)");
+    cta.className = "ko-cta";
+    cta.setAttribute("style",
+      "gap:" + (v.cfs * 0.40) + "px;" +
+      "font-size:" + v.cfs + "px;" +
+      "border-width:" + Math.max(2, Math.round(v.cfs * 0.07)) + "px;" +
+      "padding:" + (v.cfs * (v.wide ? 0.34 : 0.62)) + "px " + (v.cfs * 0.95) + "px;" +
+      "animation:" + v.aCta + ";");
+    cta.style.setProperty("--ko-sh", v.ctaShPx + "px");
+
+    var sp = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    sp.setAttribute("viewBox", "0 0 24 24");
+    sp.setAttribute("fill", "currentColor");
+    sp.setAttribute("aria-hidden", "true");
+    sp.setAttribute("style", "width:" + (v.cfs * 0.92) + "px;height:" + (v.cfs * 0.92) + "px;flex:none;");
+    var pth = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pth.setAttribute("d", "M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z");
+    sp.appendChild(pth);
+    cta.appendChild(sp);
+    cta.appendChild(el("span", "flex:none;", "PLAY ON SPOTIFY"));
+
+    // four-bar equalizer; decorative, so hidden from assistive tech
+    var eq = el("span", "display:inline-flex;align-items:flex-end;flex:none;" +
+      "gap:" + (v.cfs * 0.09) + "px;height:" + (v.cfs * 0.72) + "px;" +
+      "margin-left:" + (v.cfs * 0.12) + "px;");
+    eq.className = "ko-eq";
+    eq.setAttribute("aria-hidden", "true");
+    [0, 0.21, 0.42, 0.12].forEach(function (d) {
+      var bar = el("i", "width:" + (v.cfs * 0.11) + "px;animation-delay:" + d + "s;");
+      eq.appendChild(bar);
+    });
+    cta.appendChild(eq);
+    var botH = Math.ceil(bot.getBoundingClientRect().height);
+    var ctaWrap = el("div", "position:absolute;left:0;right:0;bottom:" + (v.pad + botH + v.gap) +
+      "px;padding:0 " + v.pad + "px;display:flex;justify-content:center;pointer-events:none;");
+    cta.style.pointerEvents = "auto";
+    if (!v.wide) {
+      cta.style.width = "100%";
+      cta.style.justifyContent = "center";
+    }
+    ctaWrap.appendChild(cta);
+    stage.appendChild(ctaWrap);
+
+    if (refs.video && refs.video.paused) {
+      // play() rejects when the browser parks background video to save
+      // power; swallow the promise too, not just a sync throw
+      try { var pr = refs.video.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {}
+    }
   }
 
   // ---- grain / timecode / jump cuts ---------------------------
@@ -297,7 +360,11 @@
     Array.prototype.forEach.call(navLayer.children, function (c) {
       if (c !== navBar) c.style.display = "none";
     });
-    navLayer.style.pointerEvents = "auto";
+    // Only the navbar strip should catch clicks. The layer spans the whole
+    // hero at z-30, so making the layer itself clickable swallows anything
+    // underneath it — including the hero's own CTA.
+    navLayer.style.pointerEvents = "none";
+    navBar.style.pointerEvents = "auto";
     navBar.classList.add("ko-navbar-host");
 
     var navH = Math.round(navBar.getBoundingClientRect().height) || 64;

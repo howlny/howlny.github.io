@@ -86,3 +86,78 @@
 @media (prefers-reduced-motion: reduce) {
   #ko-hero *, #ko-hero *::before, #ko-hero *::after { animation: none !important; }
 }
+
+/* ---- Spotify CTA: the "signal bar" ----
+   Flat and outlined at rest so it reads as the one non-yellow element in
+   the hero; on hover it fills and lifts onto a hard shadow, matching the
+   depth language of the OUT FRIDAY sticker. Icon and equalizer inherit
+   `color`, so a single colour swap flips the whole lockup. */
+#ko-hero .ko-cta {
+  --ko-sh: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: 'Archivo', sans-serif;
+  font-stretch: 62%;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.015em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  background: #0A0A0A;
+  color: #fff;
+  min-height: 44px;   /* touch target floor */
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: #D4FF00;
+  box-shadow: 0 0 0 #0A0A0A;
+  transition:
+    background .16s ease,
+    color .16s ease,
+    border-color .16s ease,
+    translate .16s cubic-bezier(.2, .8, .2, 1),
+    box-shadow .16s cubic-bezier(.2, .8, .2, 1);
+}
+#ko-hero .ko-cta > svg { color: #D4FF00; transition: color .16s ease; }
+
+#ko-hero .ko-eq i {
+  display: block;
+  height: 28%;
+  background: #D4FF00;
+  transition: background .16s ease;
+  animation: koEq .9s ease-in-out infinite;
+}
+@keyframes koEq {
+  0%, 100% { height: 24%; }
+  50%      { height: 100%; }
+}
+
+#ko-hero .ko-cta:hover,
+#ko-hero .ko-cta:focus-visible {
+  background: #D4FF00;
+  color: #0A0A0A;
+  translate: calc(var(--ko-sh) * -0.5) calc(var(--ko-sh) * -0.5);
+  box-shadow: var(--ko-sh) var(--ko-sh) 0 #0A0A0A;
+}
+#ko-hero .ko-cta:hover > svg,
+#ko-hero .ko-cta:focus-visible > svg { color: #0A0A0A; }
+#ko-hero .ko-cta:hover .ko-eq i,
+#ko-hero .ko-cta:focus-visible .ko-eq i { background: #0A0A0A; }
+
+#ko-hero .ko-cta:active {
+  translate: 0 0;
+  box-shadow: 0 0 0 #0A0A0A;
+  transition-duration: .06s;
+}
+#ko-hero .ko-cta:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #ko-hero .ko-eq i { animation: none; height: 55%; }
+  #ko-hero .ko-cta { transition: background .16s ease, color .16s ease; }
+  #ko-hero .ko-cta:hover, #ko-hero .ko-cta:focus-visible { translate: none; }
+}
