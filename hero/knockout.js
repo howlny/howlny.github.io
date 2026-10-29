@@ -263,9 +263,22 @@
     // hide every direct child of #hero except the layer holding the navbar.
     // ParticleField and friends are lazy-mounted after we run, so keep
     // watching rather than doing this once.
+    // Anything that belongs to the navigation has to survive. The mobile
+    // menu is mounted into #hero only when it is opened, so without this
+    // the observer below hides it the moment it appears.
+    function keep(c) {
+      return c === navLayer ||
+        c.id === "ko-hero" ||
+        c.id === "mobile-menu" ||
+        c.getAttribute("role") === "dialog" ||
+        c.hasAttribute("aria-modal") ||
+        c.contains(navBar);
+    }
+
     function hideStrays() {
       Array.prototype.forEach.call(hero.children, function (c) {
-        if (c !== navLayer && c.id !== "ko-hero") c.classList.add("ko-hidden");
+        if (keep(c)) c.classList.remove("ko-hidden");
+        else c.classList.add("ko-hidden");
       });
       // the old hero's background video is hidden but would still be fetched,
       // so drop it rather than pay for ~1.7 MB nobody sees
